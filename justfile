@@ -9,8 +9,10 @@ default:
 build:
     podman build -t pitcrew-agent .
 
-# Run interactive bash shell with JIRA tools
+# Run interactive bash shell with JIRA tools (sources ~/.config/jira/auth.sh if it exists)
 shell:
+    #!/usr/bin/env bash
+    [ -f ~/.config/jira/auth.sh ] && source ~/.config/jira/auth.sh
     podman run -it --rm \
       -v pitcrew-config:/home/agent/.config \
       -v $(pwd):/workspace \
@@ -18,16 +20,20 @@ shell:
       -e GH_TOKEN="${GH_TOKEN}" \
       pitcrew-agent
 
-# First-time setup - configure jira CLI
+# First-time setup - configure jira CLI (sources ~/.config/jira/auth.sh if it exists)
 setup:
+    #!/usr/bin/env bash
+    [ -f ~/.config/jira/auth.sh ] && source ~/.config/jira/auth.sh
     podman run -it --rm \
       -v pitcrew-config:/home/agent/.config \
       -v $(pwd):/workspace \
       -e JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
       pitcrew-agent bash -c "jira init && bash"
 
-# Test jira connection
+# Test jira connection (sources ~/.config/jira/auth.sh if it exists)
 test-jira:
+    #!/usr/bin/env bash
+    [ -f ~/.config/jira/auth.sh ] && source ~/.config/jira/auth.sh
     podman run -it --rm \
       -v pitcrew-config:/home/agent/.config \
       -e JIRA_API_TOKEN="${JIRA_API_TOKEN}" \

@@ -10,23 +10,36 @@ Get up and running with the PITCREW agent container in 5 minutes.
 
 ## Get Your Jira API Token
 
+### Option 1: If you already have ~/.config/jira/auth.sh
+
+The `just` commands automatically source `~/.config/jira/auth.sh` if it exists, so you can skip to the Quick Start section below.
+
+### Option 2: Create a new token
+
 1. Go to https://id.atlassian.com/manage-profile/security/api-tokens
 2. Click "Create API token"
 3. Give it a name like "PITCREW Agent"
-4. Copy the token - you'll need it in the next step
+4. Copy the token and save it:
+
+```bash
+mkdir -p ~/.config/jira
+cat > ~/.config/jira/auth.sh <<EOF
+export JIRA_API_TOKEN="your-token-here"
+EOF
+chmod 600 ~/.config/jira/auth.sh
+```
 
 ## Quick Start
 
 ### Option 1: Using `just` (Recommended)
 
+The `just` commands automatically source `~/.config/jira/auth.sh` if it exists.
+
 ```bash
 # 1. Build the container
 just build
 
-# 2. Set your Jira token
-export JIRA_API_TOKEN="your-token-here"
-
-# 3. First-time setup - configure jira CLI
+# 2. First-time setup - configure jira CLI
 just setup
 # When prompted, enter:
 #   - Installation: Cloud (or Server if using self-hosted)
@@ -34,10 +47,10 @@ just setup
 #   - Login: your-email@company.com
 #   - Project: PITCREW
 
-# 4. Test the connection
+# 3. Test the connection
 just test-jira
 
-# 5. Start working
+# 4. Start working
 just shell
 ```
 
@@ -47,15 +60,15 @@ just shell
 # 1. Build the container
 podman build -t pitcrew-agent .
 
-# 2. Run setup
-export JIRA_API_TOKEN="your-token-here"
+# 2. Source your auth script and run setup
+source ~/.config/jira/auth.sh
 podman run -it --rm \
   -v pitcrew-config:/home/agent/.config \
   -v $(pwd):/workspace \
   -e JIRA_API_TOKEN="$JIRA_API_TOKEN" \
   pitcrew-agent bash -c "jira init && bash"
 
-# 3. Test jira connection
+# 3. Test jira connection (token still in environment)
 podman run -it --rm \
   -v pitcrew-config:/home/agent/.config \
   -e JIRA_API_TOKEN="$JIRA_API_TOKEN" \
@@ -68,6 +81,15 @@ podman run -it --rm \
   -e JIRA_API_TOKEN="$JIRA_API_TOKEN" \
   pitcrew-agent
 ```
+
+**Tip:** Create an alias in your shell rc file:
+
+```bash
+# Add to ~/.bashrc or ~/.zshrc
+alias pitcrew='source ~/.config/jira/auth.sh && podman run -it --rm -v pitcrew-config:/home/agent/.config -v $(pwd):/workspace -e JIRA_API_TOKEN="$JIRA_API_TOKEN" pitcrew-agent'
+```
+
+Then just run: `pitcrew`
 
 ## What's Inside the Container?
 
