@@ -5,20 +5,16 @@ description: Triage bugs and failures - categorization, severity assessment, and
 
 # Bug Triage
 
-Knowledge for triaging bugs, failures, and issues in the CoreOS ecosystem.
+Knowledge for triaging bugs, failures, and issues in the PITCREW project.
 
 ## Querying Bugs for Triage
 
-### JQL Query for CoreOS Bugs
+### JQL Query for PITCREW Bugs
 
-Use this JQL to get bugs needing triage across all CoreOS-related projects:
+Use this JQL to get bugs needing triage in the PITCREW project:
 
 ```jql
-issuetype = Bug AND (
-  Project = "CoreOS OCP" OR 
-  project = OCPBUGS AND component = RHCOS AND (assignee != openshift-art-jira-bot OR assignee is EMPTY) OR 
-  (project = RHEL AND "AssignedTeam" = rhel-coreos AND component not in (rpm-ostree, ostree, bootc))
-)
+project = PITCREW AND issuetype = Bug AND status not in (Closed, Done, Resolved, Cancelled)
 ```
 
 ### JIRA CLI Commands
@@ -34,50 +30,45 @@ jira issue list -q '<JQL>' --plain --columns key,summary,status,labels
 jira issue view <ISSUE-KEY>
 ```
 
-## RHCOS Triage Labels
+## PITCREW Triage Labels
 
 ### Primary Triage Labels
 
 | Label | Purpose | When to Apply |
 |-------|---------|---------------|
-| `rhcos-triaged` | Bug has been reviewed and triaged by RHCOS team | After initial review and categorization |
-| `rhcos-engaged` | RHCOS team is actively investigating/working on the issue | When actively debugging or developing fix |
-| `rhcos-waitingonrhel` | Bug is blocked waiting on a fix from the RHEL team | When root cause is in RHEL package |
-| `rhcos-bootimage-needed` | Fix requires a new bootimage to be published | When fix landed but needs bootimage bump |
-| `rhcos-bootimage-tracker` | Tracking issue for bootimage bumps (automated) | Auto-applied to tracker issues |
+| `triaged` | Bug has been reviewed and triaged by PITCREW team | After initial review and categorization |
+| `in-progress` | Team is actively investigating/working on the issue | When actively debugging or developing fix |
+| `blocked` | Bug is blocked waiting on external dependency | When blocked on another team or external factor |
+| `needs-info` | Requires additional information from reporter | When details are missing |
 
 ### Triage Workflow
 
 1. **New Bug** (no labels) - Bug is filed
-2. **rhcos-triaged** - Initial review complete, then one of:
-   - **rhcos-engaged** - Actively investigating/developing fix
-   - **rhcos-waitingonrhel** - Blocked on RHEL team for fix
-   - **rhcos-bootimage-needed** - Fix landed, needs bootimage bump
+2. **triaged** - Initial review complete, then one of:
+   - **in-progress** - Actively investigating/developing fix
+   - **blocked** - Waiting on external dependency
+   - **needs-info** - Waiting for more details
 3. **Closed/Verified** - Fix delivered and confirmed
 
 ### Identifying Untriaged Bugs
 
 Bugs needing triage have:
-- Status = `New`
-- No `rhcos-triaged` label
-- No `rhcos-engaged` label
+- Status = `New` or `Open`
+- No `triaged` label
+- No `in-progress` label
 
 ### Other Common Labels
 
 | Label | Purpose |
 |-------|---------|
-| `RHCOS10` | Bug affects RHCOS 10 (RHEL 10 based) |
 | `verified` | Fix has been verified |
-| `Telco`, `Telco-5g`, `telco-ran` | Telco/5G related issues |
-| `Telco:Core` | Core Telco functionality |
-| `mco`, `mco-triaged` | Machine Config Operator related |
-| `rpm-ostree` | rpm-ostree component related |
-| `sno` | Single Node OpenShift related |
+| `automotive` | Automotive-specific functionality |
+| `customer-reported` | Reported by external customer |
+| `regression` | Previously working functionality |
 | `QE` | QE team involvement |
-| `coreos`, `rhel-coreos` | CoreOS team labels (used in RHEL project) |
 | `sustaining` | Sustaining engineering issue |
-| `UpgradeBlocker` | Blocks upgrades |
-| `UpdateRecommendationsBlocked` | Blocks update recommendations |
+| `blocker` | Blocks critical functionality |
+| `documentation` | Documentation related |
 
 ## Severity Classification
 

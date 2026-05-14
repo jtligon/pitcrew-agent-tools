@@ -1,33 +1,25 @@
 ---
 name: sprint-planning
-description: Sprint Review and Planning for COS project - velocity analysis, carryover management, and sprint composition
+description: Sprint Review and Planning for PITCREW project - velocity analysis, carryover management, and sprint composition
 ---
 
 # Sprint Review and Planning
 
-Guide for conducting Sprint Review and Sprint Planning for COS project.
+Guide for conducting Sprint Review and Sprint Planning for PITCREW project.
 
 > Related: `jira-estimation` (for story point scale and estimation guidelines)
 
-## COS Project Conventions
+## PITCREW Project Conventions
 
 ### Sprint Naming
-- East team: `CoreOS East - Sprint NNN`
-- West team: `CoreOS West - Sprint NNN`
+- Format: `PITCREW - Sprint NNN`
 
 ### Sprint Duration
-- Typically 3 weeks
-- East and West may have slightly different dates
+- Typically 2-3 weeks (adjust based on team cadence)
 
 ### Custom Fields
 - Story Points: `customfield_10028`
 - Sprint: `customfield_10020`
-
-### Team Order
-Process East team first, then West team.
-
-### Pipeline Monitoring
-Each sprint typically has 3 pipeline monitoring tasks (one per week). These can be created upon request - see "Creating Pipeline Monitoring Tasks" section.
 
 ## JIRA CLI Commands
 
@@ -35,26 +27,26 @@ Each sprint typically has 3 pipeline monitoring tasks (one per week). These can 
 
 ```bash
 # List active sprints
-jira sprint list --project COS --state active
+jira sprint list --project PITCREW --state active
 
 # List future sprints
-jira sprint list --project COS --state future
+jira sprint list --project PITCREW --state future
 
 # Get sprint ID for adding issues
-jira sprint list --project COS --state future | grep "Sprint NNN"
+jira sprint list --project PITCREW --state future | grep "Sprint NNN"
 ```
 
 ### Sprint Issues
 
 ```bash
 # List all issues in a sprint
-jira issue list --jql 'project = COS AND sprint = "CoreOS East - Sprint NNN"' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN"' --plain --no-truncate
 
 # List closed issues
-jira issue list --jql 'project = COS AND sprint = "CoreOS East - Sprint NNN" AND status = Closed' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN" AND status = Closed' --plain --no-truncate
 
 # List open issues (carryover candidates)
-jira issue list --jql 'project = COS AND sprint = "CoreOS East - Sprint NNN" AND status != Closed' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN" AND status != Closed' --plain --no-truncate
 ```
 
 ### Story Points
@@ -64,7 +56,7 @@ jira issue list --jql 'project = COS AND sprint = "CoreOS East - Sprint NNN" AND
 jira issue view <KEY> --raw | jq '.fields.customfield_10028'
 
 # Batch get story points for multiple issues
-for key in COS-1234 COS-1235 COS-1236; do
+for key in PITCREW-1234 PITCREW-1235 PITCREW-1236; do
   jira issue view "$key" --raw 2>/dev/null | jq -r '{key: .key, summary: .fields.summary, status: .fields.status.name, assignee: .fields.assignee.displayName, storyPoints: (.fields.customfield_10028 // 0)} | "\(.key)|\(.status)|\(.assignee // "Unassigned")|\(.storyPoints)|\(.summary)"'
 done
 ```
@@ -73,7 +65,7 @@ done
 
 ```bash
 # Create a task
-jira issue create --project COS --type Task --summary "<summary>" --no-input
+jira issue create --project PITCREW --type Task --summary "<summary>" --no-input
 
 # Add issue to sprint (by sprint ID)
 jira sprint add <sprint-id> <issue-key-1> <issue-key-2>
@@ -97,13 +89,8 @@ jira issue comment add <KEY> "<comment-text>"
 # Check single PR
 gh pr view <number> --repo <org>/<repo> --json title,state,reviewDecision,mergeable,updatedAt
 
-# Common repositories
-gh pr view <n> --repo coreos/coreos-assembler
-gh pr view <n> --repo coreos/butane
-gh pr view <n> --repo coreos/bootupd
-gh pr view <n> --repo coreos/afterburn
-gh pr view <n> --repo coreos/ignition
-gh pr view <n> --repo coreos/fedora-coreos-pipeline
+# Check PRs in your team's repositories
+gh pr view <n> --repo <org>/<repo>
 ```
 
 ### PR Status Interpretation
@@ -118,10 +105,10 @@ gh pr view <n> --repo coreos/fedora-coreos-pipeline
 
 ```bash
 # Search by keyword
-gh search prs --repo coreos/<repo> "<keyword>" --json number,title,state
+gh search prs --repo <org>/<repo> "<keyword>" --json number,title,state
 
 # List PRs by author
-gh pr list --repo coreos/<repo> --author <username> --state all
+gh pr list --repo <org>/<repo> --author <username> --state all
 ```
 
 ## Sprint Review Workflow
@@ -130,7 +117,7 @@ gh pr list --repo coreos/<repo> --author <username> --state all
 
 ```bash
 # Get all issues with story points
-jira issue list --jql 'project = COS AND sprint = "CoreOS East - Sprint NNN"' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN"' --plain --no-truncate
 
 # For each issue, get story points
 jira issue view <KEY> --raw | jq '{key, summary: .fields.summary, status: .fields.status.name, points: .fields.customfield_10028}'
@@ -148,12 +135,12 @@ jira issue view <KEY> --raw | jq '{key, summary: .fields.summary, status: .field
 ### 3. Identify Themes
 
 Group completed work by category:
-- Releases (FCOS next/testing/stable)
-- Platform (Azure, AWS, GCP)
-- Package additions
+- Feature development
 - Bug fixes
-- Upstream contributions
-- Pipeline monitoring
+- Technical debt
+- Documentation
+- Customer requests
+- Operational tasks
 
 ### 4. Team Performance
 
@@ -173,7 +160,7 @@ Group completed work by category:
 
 ```bash
 # Open items from previous sprint
-jira issue list --jql 'project = COS AND sprint = "CoreOS East - Sprint NNN" AND status != Closed' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN" AND status != Closed' --plain --no-truncate
 ```
 
 ### 2. Check GitHub PR Status
@@ -198,7 +185,7 @@ For each item in Review/In Progress, check if PR exists and its status:
 Based on previous sprint:
 - If completion was < 50%, reduce commitment
 - Target 70-80% completion rate
-- Account for pipeline monitoring (operational overhead)
+- Account for operational overhead
 
 ### 5. Risk Assessment
 
@@ -208,48 +195,34 @@ Based on previous sprint:
 | Medium | In Progress with active work |
 | High | Not started, or 8+ point stories |
 
-## Creating Pipeline Monitoring Tasks
+## Creating Recurring Sprint Tasks
 
 > **Note:** Create these tasks only when requested by the user.
 
-Pipeline monitoring tasks follow this pattern:
+For recurring operational tasks that happen each sprint:
 
 ```bash
-# Create pipeline monitoring task
-jira issue create --project COS --type Task \
-  --summary "Pipeline monitoring - Sprint NNN - Ws YYYYMMDD" \
+# Create operational task
+jira issue create --project PITCREW --type Task \
+  --summary "<task name> - Sprint NNN" \
   --no-input
 
 # Add to sprint (get sprint ID first)
 jira sprint add <sprint-id> <issue-key>
 ```
 
-### Naming Convention
-- Format: `Pipeline monitoring - Sprint NNN - Ws YYYYMMDD`
-- `Ws` = Week starting
-- One task per week of the sprint (typically 3 per sprint)
-
 ### Story Points
-- East team: 5 points per week
-- West team: 2 points per week
-- Set manually in JIRA UI after creation
-
-### Example for 3-week Sprint 287 (Apr 13 - May 4)
-| Task | Week Starting |
-|------|---------------|
-| Pipeline monitoring - Sprint 287 - Ws 20260413 | Apr 13 |
-| Pipeline monitoring - Sprint 287 - Ws 20260420 | Apr 20 |
-| Pipeline monitoring - Sprint 287 - Ws 20260427 | Apr 27 |
+- Set manually in JIRA UI after creation based on team conventions
 
 ## Output Templates
 
 ### Sprint Review Summary
 
 ```markdown
-## Sprint NNN Review - CoreOS East/West
+## Sprint NNN Review - PITCREW
 
 ### Sprint Details
-- **Sprint:** CoreOS East/West - Sprint NNN
+- **Sprint:** PITCREW - Sprint NNN
 - **Duration:** MMM DD - MMM DD, YYYY
 
 ### Sprint Statistics
@@ -288,16 +261,16 @@ jira sprint add <sprint-id> <issue-key>
 ### Sprint Planning Summary
 
 ```markdown
-## Sprint NNN Planning - CoreOS East/West
+## Sprint NNN Planning - PITCREW
 
 ### Sprint Details
-- **Sprint:** CoreOS East/West - Sprint NNN
+- **Sprint:** PITCREW - Sprint NNN
 - **Duration:** MMM DD - MMM DD, YYYY
 
 ### Sprint Composition
 | Category | Points | Items |
 |----------|--------|-------|
-| Pipeline Monitoring | X | 3 |
+| Operational Tasks | X | N |
 | Carryover - In Review | X | N |
 | Carryover - In Progress | X | N |
 | Carryover - New | X | N |
@@ -346,10 +319,9 @@ jira sprint add <sprint-id> <issue-key>
 
 ## Tips
 
-1. **Process East first, then West** - They may have different sprint dates
-2. **Check PR status for Review items** - Quick wins if mergeable
-3. **Watch 8-point stories** - High risk, consider splitting (see `jira-estimation` skill)
-4. **Account for pipeline monitoring** - Operational overhead each sprint
-5. **Realistic carryover** - Don't carry forward items that weren't started
-6. **Close completed items** - Check if PRs were merged but JIRA not updated
-7. **Rebase conflicting PRs** - Address before bringing into new sprint
+1. **Check PR status for Review items** - Quick wins if mergeable
+2. **Watch 8-point stories** - High risk, consider splitting (see `jira-estimation` skill)
+3. **Account for operational overhead** - Recurring tasks each sprint
+4. **Realistic carryover** - Don't carry forward items that weren't started
+5. **Close completed items** - Check if PRs were merged but JIRA not updated
+6. **Rebase conflicting PRs** - Address before bringing into new sprint

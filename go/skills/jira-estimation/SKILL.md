@@ -41,16 +41,16 @@ jira issue view <ISSUE-KEY> --raw | jq '{
 
 ```bash
 # Find closed stories with story points matching keywords
-jira issue list --jql 'project = COS AND type = Story AND status = Closed AND "Story Points[Number]" > 0 AND summary ~ "<keyword>"' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND type = Story AND status = Closed AND "Story Points[Number]" > 0 AND summary ~ "<keyword>"' --plain --no-truncate
 
 # Get story points for specific issues
 jira issue view <ISSUE-KEY> --raw | jq '{key: .key, summary: .fields.summary, storyPoints: .fields.customfield_10028}'
 
 # Find stories by label
-jira issue list --jql 'project = COS AND type = Story AND status = Closed AND "Story Points[Number]" > 0 AND labels = "<label>"' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND type = Story AND status = Closed AND "Story Points[Number]" > 0 AND labels = "<label>"' --plain --no-truncate
 
 # Find stories in same epic
-jira issue list --jql 'project = COS AND type = Story AND status = Closed AND "Story Points[Number]" > 0 AND "Epic Link" = <EPIC-KEY>' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND type = Story AND status = Closed AND "Story Points[Number]" > 0 AND "Epic Link" = <EPIC-KEY>' --plain --no-truncate
 ```
 
 ### Setting Story Points
