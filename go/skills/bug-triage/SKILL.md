@@ -11,20 +11,19 @@ Knowledge for triaging bugs, failures, and issues in the PITCREW project.
 
 ### JQL Query for PITCREW Bugs
 
-Use this JQL to get bugs needing triage in the PITCREW project:
-
 ```jql
-project = PITCREW AND issuetype = Bug AND status not in (Closed, Done, Resolved, Cancelled)
+project = PITCREW AND issuetype = Bug 
+  AND status not in (Closed, Done, Resolved, Cancelled)
 ```
 
 ### JIRA CLI Commands
 
 ```bash
-# List bugs with key columns
-jira issue list -q '<JQL>' --plain --columns key,summary,status,priority,assignee,created
+# List all open bugs
+jira issue list -q 'project = PITCREW AND issuetype = Bug AND status not in (Closed, Done, Resolved, Cancelled)' --plain --columns key,summary,status,priority,assignee,created,labels
 
-# List bugs with labels for triage status
-jira issue list -q '<JQL>' --plain --columns key,summary,status,labels
+# List untriaged bugs (no triaged label)
+jira issue list -q 'project = PITCREW AND issuetype = Bug AND labels != triaged AND status not in (Closed, Done, Resolved, Cancelled)' --plain --columns key,summary,status,priority,assignee,labels
 
 # View specific issue details
 jira issue view <ISSUE-KEY>
@@ -43,7 +42,7 @@ jira issue view <ISSUE-KEY>
 
 ### Triage Workflow
 
-1. **New Bug** (no labels) - Bug is filed
+1. **New Bug** - Bug issue is created
 2. **triaged** - Initial review complete, then one of:
    - **in-progress** - Actively investigating/developing fix
    - **blocked** - Waiting on external dependency
@@ -53,7 +52,8 @@ jira issue view <ISSUE-KEY>
 ### Identifying Untriaged Bugs
 
 Bugs needing triage have:
-- Status = `New` or `Open`
+- Issue type = `Bug`
+- Status = `New`, `Open`, or `To Do`
 - No `triaged` label
 - No `in-progress` label
 
@@ -76,10 +76,10 @@ Bugs needing triage have:
 
 | Priority | Criteria | Response Time |
 |----------|----------|---------------|
-| **Critical** | Pipeline blocked, cluster install broken, upgrade blocker | Immediate |
+| **Critical** | Customer deployment blocked, critical functionality broken, security issue | Immediate |
 | **Major** | Core functionality affected, no workaround | Same day |
 | **Normal** | Standard bugs, workarounds may exist | Within sprint |
-| **Minor** | Low impact, cosmetic issues | Backlog |
+| **Minor** | Low impact, cosmetic issues, enhancement | Backlog |
 | **Undefined** | Needs triage to determine priority | Triage immediately |
 
 ## Triage Checklist
@@ -89,54 +89,58 @@ When triaging a new bug:
 1. **Review the bug description**
    - Understand the reported issue
    - Check for reproducibility information
-   - Note affected OCP/RHCOS versions
+   - Note affected product versions and environments
 
 2. **Check for duplicates**
-   - Search for similar issues
+   - Search for similar issues: `project = PITCREW AND labels = "CTC bugs" AND summary ~ "keyword"`
    - Link duplicates if found
 
 3. **Identify affected component**
-   - Is this RHCOS, MCO, rpm-ostree, ignition, etc.?
-   - Is this a kernel/RHEL package issue?
+   - Which product/component is affected?
+   - Is this a dependency issue?
+   - Customer-specific or general?
 
 4. **Determine blocking status**
-   - Does this block installs?
-   - Does this block upgrades?
-   - Is this a regression?
+   - Does this block customer deployments?
+   - Does this affect critical functionality?
+   - Is this a regression from previous version?
 
 5. **Apply appropriate labels**
-   - Add `rhcos-triaged` after review
-   - Add component labels (`RHCOS10`, `sno`, etc.)
-   - Add `rhcos-waitingonrhel` if RHEL dependency
-   - Add `rhcos-bootimage-needed` if bootimage required
+   - Add `triaged` after review
+   - Add component/product labels
+   - Add `blocked` if external dependency
+   - Add `customer-reported` if from customer
+   - Add `regression` if previously working
 
 6. **Set priority**
-   - Critical/Major for blockers
+   - Critical/Major for blockers or customer-impacting
    - Normal for standard bugs
    - Minor for low impact
 
 ## Root Cause Analysis Structure
 
-When analyzing a failure, document:
+When analyzing a bug, document:
 
 1. **Evidence**
-   - Build number, job, stream, timestamp
+   - Product version, environment, timestamp
    - Error messages (verbatim, in code blocks)
    - Relevant log snippets
+   - Steps to reproduce
 
 2. **Analysis**
-   - What changed between last good and failed build
-   - Package changes (use `builds diff`)
-   - coreos-assembler changes
-   - Infrastructure changes
+   - What changed between working and failing state
+   - Recent code/config changes
+   - Environmental factors
+   - Dependency changes
 
 3. **Conclusion**
    - Identified root cause with confidence level
    - Relevant commits/PRs
    - Whether this is a regression or new issue
+   - Impact assessment
 
 4. **Recommendations**
    - Specific fix suggestions
    - Links to relevant PRs/issues
    - Workarounds if available
-   - Whether retry is appropriate
+   - Prevention measures for similar issues
