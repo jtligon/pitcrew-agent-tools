@@ -17,6 +17,7 @@ shell:
       -v pitcrew-config:/home/agent/.config \
       -v $(pwd):/workspace \
       -e JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
+      -e JIRA_AUTH_TYPE="bearer" \
       -e GH_TOKEN="${GH_TOKEN}" \
       pitcrew-agent
 
@@ -28,6 +29,7 @@ setup:
       -v pitcrew-config:/home/agent/.config \
       -v $(pwd):/workspace \
       -e JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
+      -e JIRA_AUTH_TYPE="bearer" \
       pitcrew-agent bash -c "jira init && bash"
 
 # Test jira connection (sources ~/.config/jira/auth.sh if it exists)
@@ -37,6 +39,7 @@ test-jira:
     podman run -it --rm \
       -v pitcrew-config:/home/agent/.config \
       -e JIRA_API_TOKEN="${JIRA_API_TOKEN}" \
+      -e JIRA_AUTH_TYPE="bearer" \
       pitcrew-agent jira issue list --project PITCREW
 
 # Clean up volumes
