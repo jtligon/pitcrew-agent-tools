@@ -1,23 +1,37 @@
 # Installation Guide
 
-Quick setup guide for using PITCREW Agent Tools skills with Claude Code.
+Setup guide for using PITCREW Agent Tools skills.
 
 ## Prerequisites
 
-- [Claude Code](https://claude.ai/code) installed (CLI, Desktop, or Web)
-- [Jira CLI](https://github.com/ankitpokhrel/jira-cli) installed (for JIRA integration)
+- [Jira CLI](https://github.com/ankitpokhrel/jira-cli) for querying JIRA
 - Access to the PITCREW JIRA project
+- (Optional) [Claude Code](https://claude.ai/code) for using skills
 
-## Setup
+## Install Jira CLI
 
-### 1. Clone the Repository
+### macOS
 
 ```bash
-git clone https://github.com/jtligon/pitcrew-agent-tools.git
-cd pitcrew-agent-tools
+brew install ankitpokhrel/jira-cli/jira-cli
 ```
 
-### 2. Configure Jira CLI
+### Linux
+
+```bash
+# Download latest release
+curl -fsSL https://github.com/ankitpokhrel/jira-cli/releases/latest/download/jira_<version>_linux_x86_64.tar.gz -o jira.tar.gz
+tar -xzf jira.tar.gz
+sudo mv jira /usr/local/bin/
+```
+
+### Verify Installation
+
+```bash
+jira version
+```
+
+## Configure Jira CLI
 
 The skills use the `jira` CLI to query and manage issues. Configure it for your PITCREW project:
 
@@ -34,45 +48,70 @@ Follow the prompts:
 
 #### Create a Jira API Token
 
-1. Go to your JIRA profile → **Account Settings** → **Security** → **API tokens**
+1. Go to https://id.atlassian.com/manage-profile/security/api-tokens
 2. Click **Create API token**
-3. Copy the token and provide it when `jira init` prompts
-
-#### Verify Setup
+3. Save it to `~/.config/jira/auth.sh`:
 
 ```bash
+mkdir -p ~/.config/jira
+cat > ~/.config/jira/auth.sh <<EOF
+export JIRA_API_TOKEN="your-token-here"
+export JIRA_AUTH_TYPE="bearer"
+EOF
+chmod 600 ~/.config/jira/auth.sh
+```
+
+#### Test Configuration
+
+```bash
+source ~/.config/jira/auth.sh
 jira issue list --project PITCREW
 ```
 
 You should see your PITCREW issues listed.
 
-### 3. Using Skills with Claude Code
+## Clone the Repository
 
-Skills are automatically available when Claude Code runs in this directory. The skills are located in `go/skills/`.
+```bash
+git clone https://github.com/jtligon/pitcrew-agent-tools.git
+cd pitcrew-agent-tools
+```
 
-#### Option A: Project-Level (Recommended)
+## Using the Skills
 
-When working in this directory, Claude Code automatically has access to all skills:
+### Option 1: With Claude Code
+
+Skills are automatically available when Claude Code runs in this directory:
 
 ```bash
 cd pitcrew-agent-tools
-claude  # or open in Claude Code Desktop/Web
+# Open in Claude Code
 ```
 
-Then reference skills in your conversation:
-- "Using the feature-triage skill, check PITCREW-1234 for duplicates"
-- "Use bug-triage to categorize the new bugs"
-- "Help me estimate PITCREW-5678 using jira-estimation"
+Then reference skills in conversation:
+- "Using feature-triage, check PITCREW-1234 for duplicates"
+- "List untriaged bugs in PITCREW"
+- "Help me estimate PITCREW-5678"
 
-#### Option B: Global Skills
+#### Global Skills (Optional)
 
-To use these skills in any project, copy them to your global skills directory:
+To use skills in any project:
 
 ```bash
 cp -r go/skills/* ~/.claude/skills/
 ```
 
-Now these skills are available in any Claude Code session.
+### Option 2: Use JQL Queries Directly
+
+Each skill contains JQL queries you can use with jira CLI or Jira web UI:
+
+```bash
+# From bug-triage skill
+jira issue list -q 'project = PITCREW AND issuetype = Bug AND labels != triaged'
+
+# From feature-triage skill  
+jira issue list -q 'project = PITCREW AND issuetype = Feature'
+```
 
 ## Available Skills
 
