@@ -6,11 +6,23 @@ This file provides guidance to Claude Code when working with PITCREW team workfl
 
 **PITCREW** is a product ownership team within Automotive Engineering at Red Hat.
 
+## Upstream Repositories
+
+| Component | Repository | Purpose |
+|-----------|------------|---------|
+| Jumpstarter | https://github.com/jumpstarter-dev/jumpstarter | HiL testing framework (`python/`, `controller/`, `protocol/`, `e2e/`) |
+| CAIB | https://github.com/centos-automotive-suite/automotive-dev-operator | Automotive OS image builds on OpenShift (`caib` CLI, ImageBuild CRD) |
+| Security | TBD | Map to upstream repo(s) |
+
+See [docs/PHASE0.md](docs/PHASE0.md) for full inventory.
+
 ## JIRA Configuration
 
 ### Project
 - **Primary Project**: PITCREW
-- **Components**: (To be configured based on team structure)
+- **Host**: redhat.atlassian.net
+- **Components**: Jumpstarter, CAIB, Security
+- **Labels**: https://github.com/jumpstarter-dev/jumpstarter/labels (Jumpstarter); confirm CAIB/Security label conventions
 
 ### Common Workflows
 - Bug triage and prioritization
@@ -67,10 +79,9 @@ Follow this pattern when working on JIRA-related tasks:
 3. **Execute** - Apply decisions (labels, comments, links)
 4. **Document** - Update skills if new patterns emerge
 
-## Customization Notes
+## Scope (Phase 0)
 
-This CLAUDE.md should be customized with:
-- Specific JIRA components used by PITCREW
-- Team-specific labels and workflows
-- Links to team documentation
-- Automotive domain terminology
+- **In scope:** JIRA PO workflows, upstream investigation (Jumpstarter, automotive-dev-operator)
+- **Deferred:** OpenCode container, Go CLI, Jenkins CI monitoring
+
+Details: [docs/PHASE0.md](docs/PHASE0.md)

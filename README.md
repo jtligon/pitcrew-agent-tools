@@ -42,6 +42,8 @@ Skills in `go/skills/` provide specialized knowledge for:
 ## Documentation
 
 - **[INSTALL.md](INSTALL.md)** - Setup guide for jira CLI
+- **[ROADMAP.md](ROADMAP.md)** - Customization checklist (porting from coreos-agent-tools)
+- **[docs/PHASE0.md](docs/PHASE0.md)** - Scope, upstream repos, JIRA inventory
 - **[go/skills/README.md](go/skills/README.md)** - Skills documentation
 
 ## Issue Types
