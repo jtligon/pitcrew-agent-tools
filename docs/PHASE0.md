@@ -2,20 +2,29 @@
 
 Decisions and reference data for customizing pitcrew-agent-tools from coreos-agent-tools.
 
-**Status:** in progress — upstream repos confirmed; JIRA audit and scope decisions still need confirmation.
+**Status:** complete (2026-05-29) — verified with `jira` CLI. Re-run [scripts/verify-phase0-jira.sh](../scripts/verify-phase0-jira.sh) after token or project changes.
+
+---
+
+## Tooling
+
+| Tool | Use for JIRA? |
+|------|----------------|
+| **`jira` CLI** | **Yes** — sole integration for agents and humans |
+| Atlassian MCP | **No** — do not use; keep tokens in `~/.config/jira/auth.sh` only |
+
+Load auth before commands: `source ~/.config/jira/auth.sh` and **do not** set `JIRA_AUTH_TYPE=bearer` for standard Atlassian API tokens on `redhat.atlassian.net` (causes 403).
 
 ---
 
 ## Primary use case
 
-**Proposed (confirm):**
-
 | Layer | In scope? | Notes |
 |-------|-----------|-------|
 | JIRA PO workflows | Yes | bug/feature triage, estimation, sprint planning — skills exist |
 | Upstream code investigation | Yes | Jumpstarter + automotive-dev-operator repos |
-| CI pipeline monitoring | No (for now) | coreos Jenkins/kola agents deferred unless needed later |
-| Container / OpenCode agent | Later | skills-only + Claude Code is sufficient for Phase 1–2 |
+| CI pipeline monitoring | No (for now) | coreos Jenkins/kola agents deferred; revisit if PO wants automated CI triage |
+| Container / OpenCode agent | Later | port from coreos-agent-tools when PO workflows stabilize (Phase 3+) |
 
 ---
 
@@ -29,16 +38,37 @@ Decisions and reference data for customizing pitcrew-agent-tools from coreos-age
 
 ---
 
+## PITCREW board and components
+
+All work is tracked on one JIRA project and scrum board:
+
+| Item | Value |
+|------|-------|
+| Project | `PITCREW` |
+| Board | `PitCrew` |
+
+**JIRA components** partition work on that board. Two components map to upstream codebases; the third is for Product Security only:
+
+| Component | Upstream repo? | Role |
+|-----------|----------------|------|
+| `Jumpstarter` | Yes — [jumpstarter](https://github.com/jumpstarter-dev/jumpstarter) | HiL testing product area |
+| `Automotive-dev-operator` | Yes — [automotive-dev-operator](https://github.com/centos-automotive-suite/automotive-dev-operator) | CAIB / automotive OS image builds |
+| `Security` | **No** | Product Security assigns **embargoed CVEs** to PITCREW; not a third product codebase |
+
+Jumpstarter and Automotive-dev-operator are separate engineering streams under the same PITCREW team. They do not share a monorepo, but both use the same board and PO workflows.
+
+---
+
 ## Upstream repositories
 
-Primary repos the agent should know about (maps to future `pitcrew-repositories` skill).
+Codebases tied to JIRA components (maps to future `pitcrew-repositories` skill). **Security is not listed here** — it has no upstream project.
 
 ### Jumpstarter
 
 | | |
 |---|---|
 | **URL** | https://github.com/jumpstarter-dev/jumpstarter |
-| **JIRA component** | Jumpstarter |
+| **JIRA component** | `Jumpstarter` |
 | **Purpose** | Open-source HiL (hardware-in-the-loop) testing framework; Python client, K8s controller, gRPC protocol |
 | **Docs** | https://jumpstarter.dev |
 | **Labels reference** | https://github.com/jumpstarter-dev/jumpstarter/labels |
@@ -64,7 +94,7 @@ Primary repos the agent should know about (maps to future `pitcrew-repositories`
 | | |
 |---|---|
 | **URL** | https://github.com/centos-automotive-suite/automotive-dev-operator |
-| **JIRA component** | CAIB |
+| **JIRA component** | `Automotive-dev-operator` (product area often called CAIB) |
 | **Purpose** | OpenShift operator for building automotive OS images via Automotive Image Builder (AIB); includes `caib` CLI |
 | **Docs** | https://sigs.centos.org/automotive/latest/ (AutoSD / AIB) |
 
@@ -85,14 +115,18 @@ Primary repos the agent should know about (maps to future `pitcrew-repositories`
 ### Repository relationship
 
 ```
-Jumpstarter                          Automotive Dev Operator
-(HiL testing, device automation)     (automotive OS image builds on OpenShift)
-        │                                        │
-        └──────── PITCREW product scope ─────────┘
-              (bugs/features tracked in JIRA)
+                    PitCrew board (PITCREW project)
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+   Jumpstarter      Automotive-dev-operator    Security
+   (upstream repo)   (upstream repo)            (embargoed CVEs;
+        │                     │                  no upstream repo)
+        └────────── separate product areas ─────┘
+              same team, shared PO/triage workflows
 ```
 
-No direct code dependency between the two repos today; PITCREW owns PO/triage across both product areas.
+No direct code dependency between the two upstream repos today.
 
 ---
 
@@ -109,19 +143,21 @@ No direct code dependency between the two repos today; PITCREW owns PO/triage ac
 
 ## JIRA configuration
 
-### Confirmed from skills / CLAUDE.md
+Verified via `jira` CLI (2026-05-29).
 
 | Field | Value |
 |-------|-------|
 | Project key | `PITCREW` |
-| Host | `redhat.atlassian.net` (from local jira CLI config) |
-| Components | Jumpstarter, CAIB, Security |
-| Sprint naming | `PITCREW - Sprint NNN` |
+| Host | `https://redhat.atlassian.net` |
+| Project type | business |
+| Default board | **`PitCrew`** (scrum, board ID `4323`) |
+| Components | `Jumpstarter`, `Automotive-dev-operator`, `Security` (CVE embargoes only — not an upstream product) |
+| Sprint naming | **`PitCrew Sprint N`** (e.g. `PitCrew Sprint 11`) |
 | Story points field | `customfield_10028` |
 | Sprint field | `customfield_10020` |
 | Epic link field | `customfield_10014` |
 
-### Issue types (from README / skills)
+### Issue types
 
 - Bug
 - Feature (feature requests / RFEs)
@@ -129,49 +165,61 @@ No direct code dependency between the two repos today; PITCREW owns PO/triage ac
 - Task
 - Epic
 
+### Statuses in use
+
+`New`, `Refinement`, `In Progress`, `Review`, `Closed`
+
+**Terminal status for JQL:** use `Closed` (this project does not use `Done`, `Resolved`, or `Cancelled`).
+
+Skills still list `Done`/`Resolved`/`Cancelled` in some queries for portability; tighten in Phase 2.
+
 ### Label taxonomy (from `bug-triage` skill)
 
 **Triage workflow:** `triaged`, `in-progress`, `blocked`, `needs-info`
 
 **Other:** `verified`, `automotive`, `customer-reported`, `regression`, `QE`, `sustaining`, `blocker`, `documentation`, `CTC bugs`
 
-### Still to verify (run locally)
+### `jira init` reference
 
 ```bash
 source ~/.config/jira/auth.sh
-jira issue list --project PITCREW --plain --columns key,issuetype,status | head
-jira board list --project PITCREW
-jira sprint list --project PITCREW --state active
+unset JIRA_AUTH_TYPE
+jira init
+# Server: https://redhat.atlassian.net
+# Project: PITCREW
+# Board: PitCrew
 ```
 
-- [ ] Board name for `jira init`
-- [ ] Full component list matches JIRA (Jumpstarter, CAIB, Security)
-- [ ] Custom field IDs still correct (`customfield_10028`, etc.)
-- [ ] Terminal status names (`Closed` vs `Done` vs `Resolved`)
+### Audit checklist
+
+- [x] Board name — `PitCrew`
+- [x] Components — Jumpstarter, Automotive-dev-operator, Security
+- [x] Custom field IDs — `customfield_10028`, `10020`, `10014`
+- [x] Terminal status — `Closed`
 
 ---
 
 ## Related JIRA projects
 
-**TBD — fill in cross-project links PITCREW issues reference:**
+No cross-project issue links observed in spot checks. Fill this table when linking patterns emerge:
 
 | Project | Relationship | Example use |
 |---------|--------------|-------------|
-| | Customer escalations | |
-| | Upstream engineering | |
-| | Security | |
+| TBD | Customer escalations | |
+| TBD | Upstream engineering | |
+| (n/a) | Embargoed CVEs use component `Security` on PITCREW — not a separate JIRA project | |
 
 ---
 
-## Open decisions
+## Phase 0 decisions (closed)
 
-Answer these to close Phase 0:
-
-1. **Use case confirm** — Is CI pipeline monitoring permanently out of scope, or wanted later?
-2. **Container timeline** — When (if ever) to port the OpenCode container from coreos-agent-tools?
-3. **Related JIRA projects** — Which projects do PITCREW bugs/features link to?
-4. **Board name** — Exact scrum board name for `jira init`
-5. **Security component** — What upstream repo(s) map to the Security JIRA component?
+| # | Decision |
+|---|----------|
+| 1 | CI pipeline monitoring **out of scope** until a Jenkins/CI target is defined |
+| 2 | OpenCode container **deferred** until PO skills/workflows are stable |
+| 3 | Related JIRA projects — **document as discovered** (table above) |
+| 4 | Board name — **`PitCrew`** |
+| 5 | **Security component** — embargoed CVE intake only; **no upstream repo** |
 
 ---
 
@@ -181,3 +229,6 @@ Answer these to close Phase 0:
 |------|------|
 | 2026-05-29 | Phase 0 doc created |
 | 2026-05-29 | Upstream repos confirmed: jumpstarter, automotive-dev-operator |
+| 2026-05-29 | JIRA audit via CLI; fixed auth (`unset JIRA_AUTH_TYPE`); sprint/board names corrected |
+| 2026-05-29 | Phase 0 closed — agents use `jira` CLI only, not Atlassian MCP |
+| 2026-05-29 | Clarified components: two upstream products on PitCrew board; Security = embargoed CVEs only |

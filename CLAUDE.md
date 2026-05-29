@@ -6,13 +6,15 @@ This file provides guidance to Claude Code when working with PITCREW team workfl
 
 **PITCREW** is a product ownership team within Automotive Engineering at Red Hat.
 
-## Upstream Repositories
+## JIRA structure
 
-| Component | Repository | Purpose |
-|-----------|------------|---------|
-| Jumpstarter | https://github.com/jumpstarter-dev/jumpstarter | HiL testing framework (`python/`, `controller/`, `protocol/`, `e2e/`) |
-| CAIB | https://github.com/centos-automotive-suite/automotive-dev-operator | Automotive OS image builds on OpenShift (`caib` CLI, ImageBuild CRD) |
-| Security | TBD | Map to upstream repo(s) |
+PITCREW uses one project and **PitCrew** scrum board. Work is split by **component**:
+
+| Component | Upstream repo | Notes |
+|-----------|---------------|-------|
+| Jumpstarter | https://github.com/jumpstarter-dev/jumpstarter | HiL testing (`python/`, `controller/`, `protocol/`, `e2e/`) |
+| Automotive-dev-operator | https://github.com/centos-automotive-suite/automotive-dev-operator | CAIB / OS image builds (`caib` CLI, ImageBuild CRD) |
+| Security | *(none)* | Product Security — **embargoed CVEs** assigned into PITCREW; not a product codebase |
 
 See [docs/PHASE0.md](docs/PHASE0.md) for full inventory.
 
@@ -21,8 +23,8 @@ See [docs/PHASE0.md](docs/PHASE0.md) for full inventory.
 ### Project
 - **Primary Project**: PITCREW
 - **Host**: redhat.atlassian.net
-- **Components**: Jumpstarter, CAIB, Security
-- **Labels**: https://github.com/jumpstarter-dev/jumpstarter/labels (Jumpstarter); confirm CAIB/Security label conventions
+- **Board**: PitCrew
+- **Labels**: https://github.com/jumpstarter-dev/jumpstarter/labels (Jumpstarter); confirm Automotive-dev-operator label conventions
 
 ### Common Workflows
 - Bug triage and prioritization
@@ -35,8 +37,16 @@ See [docs/PHASE0.md](docs/PHASE0.md) for full inventory.
 ### Task Tracking
 Use `bd` for local task tracking during development sessions.
 
-### JIRA CLI
-The `jira` CLI is used for issue management. Default project is PITCREW.
+### JIRA access
+
+Use the **`jira` CLI only** for JIRA queries and updates. Do **not** use the Atlassian MCP plugin.
+
+```bash
+source ~/.config/jira/auth.sh
+unset JIRA_AUTH_TYPE   # required for redhat.atlassian.net API tokens
+```
+
+Default project: `PITCREW`. Default board: `PitCrew`. Sprint names: `PitCrew Sprint N` (not `PITCREW - Sprint N`).
 
 Example queries:
 ```bash

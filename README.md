@@ -9,8 +9,9 @@ Claude Code skills for PITCREW - Automotive Engineering team.
 brew install ankitpokhrel/jira-cli/jira-cli
 
 # 2. Configure for PITCREW
-source ~/.config/jira/auth.sh  # if you have it
-jira init
+source ~/.config/jira/auth.sh
+unset JIRA_AUTH_TYPE
+jira init   # board: PitCrew
 
 # 3. Test it works
 jira issue list --project PITCREW

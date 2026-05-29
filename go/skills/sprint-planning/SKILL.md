@@ -12,7 +12,8 @@ Guide for conducting Sprint Review and Sprint Planning for PITCREW project.
 ## PITCREW Project Conventions
 
 ### Sprint Naming
-- Format: `PITCREW - Sprint NNN`
+- Format: `PitCrew Sprint N` (e.g. `PitCrew Sprint 11`)
+- Board: `PitCrew` (scrum)
 
 ### Sprint Duration
 - Typically 2-3 weeks (adjust based on team cadence)
@@ -40,13 +41,13 @@ jira sprint list --project PITCREW --state future | grep "Sprint NNN"
 
 ```bash
 # List all issues in a sprint
-jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN"' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PitCrew Sprint NNN"' --plain --no-truncate
 
 # List closed issues
-jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN" AND status = Closed' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PitCrew Sprint NNN" AND status = Closed' --plain --no-truncate
 
 # List open issues (carryover candidates)
-jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN" AND status != Closed' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PitCrew Sprint NNN" AND status != Closed' --plain --no-truncate
 ```
 
 ### Story Points
@@ -117,7 +118,7 @@ gh pr list --repo <org>/<repo> --author <username> --state all
 
 ```bash
 # Get all issues with story points
-jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN"' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PitCrew Sprint NNN"' --plain --no-truncate
 
 # For each issue, get story points
 jira issue view <KEY> --raw | jq '{key, summary: .fields.summary, status: .fields.status.name, points: .fields.customfield_10028}'
@@ -160,7 +161,7 @@ Group completed work by category:
 
 ```bash
 # Open items from previous sprint
-jira issue list --jql 'project = PITCREW AND sprint = "PITCREW - Sprint NNN" AND status != Closed' --plain --no-truncate
+jira issue list --jql 'project = PITCREW AND sprint = "PitCrew Sprint NNN" AND status != Closed' --plain --no-truncate
 ```
 
 ### 2. Check GitHub PR Status
@@ -222,7 +223,7 @@ jira sprint add <sprint-id> <issue-key>
 ## Sprint NNN Review - PITCREW
 
 ### Sprint Details
-- **Sprint:** PITCREW - Sprint NNN
+- **Sprint:** PitCrew Sprint NNN
 - **Duration:** MMM DD - MMM DD, YYYY
 
 ### Sprint Statistics
@@ -264,7 +265,7 @@ jira sprint add <sprint-id> <issue-key>
 ## Sprint NNN Planning - PITCREW
 
 ### Sprint Details
-- **Sprint:** PITCREW - Sprint NNN
+- **Sprint:** PitCrew Sprint NNN
 - **Duration:** MMM DD - MMM DD, YYYY
 
 ### Sprint Composition

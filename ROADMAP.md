@@ -8,22 +8,24 @@ Update checkboxes as you work. Add notes inline or link PRs/commits next to item
 
 ---
 
-## Phase 0: Scope & inventory
+## Phase 0: Scope & inventory — complete
 
 See **[docs/PHASE0.md](docs/PHASE0.md)** for full details.
 
 - [x] Document primary use case — JIRA PO + upstream investigation; CI/container deferred
 - [x] Choose runtime — Claude Code skills now; OpenCode container later
 - [x] Inventory upstream repos — [jumpstarter](https://github.com/jumpstarter-dev/jumpstarter), [automotive-dev-operator](https://github.com/centos-automotive-suite/automotive-dev-operator)
-- [~] Audit JIRA project structure:
+- [x] Audit JIRA project structure (via `jira` CLI — see `scripts/verify-phase0-jira.sh`):
   - [x] Host URL — `redhat.atlassian.net`
   - [x] Issue types — Bug, Feature, Story, Task, Epic
-  - [x] Components list — Jumpstarter, CAIB, Security
+  - [x] Components — Jumpstarter + Automotive-dev-operator (upstream); Security (embargoed CVEs, no repo)
   - [x] Label taxonomy — documented in `bug-triage` skill
   - [x] Story points custom field ID — `customfield_10028`
-  - [x] Sprint naming convention — `PITCREW - Sprint NNN`
-  - [ ] Board name for `jira init` — verify locally
-- [ ] List related JIRA projects for cross-project queries
+  - [x] Sprint naming — `PitCrew Sprint N`
+  - [x] Board name — `PitCrew` (ID 4323)
+  - [x] Terminal status — `Closed`
+  - [x] JIRA tooling — `jira` CLI only (not Atlassian MCP)
+- [~] List related JIRA projects — none linked in spot check; fill table in PHASE0.md as needed
 - [x] CI pipeline monitoring — **out of scope** for now (no Jenkins URL)
 
 ---
@@ -32,7 +34,7 @@ See **[docs/PHASE0.md](docs/PHASE0.md)** for full details.
 
 - [x] Initial README (skills-only quick start)
 - [x] Initial INSTALL.md (jira CLI setup)
-- [~] CLAUDE.md — upstream repos and scope added; Security component repo TBD
+- [x] CLAUDE.md — board/components; two upstream repos; Security = embargoed CVEs only
 - [x] LICENSE
 - [ ] `.env.example` — `JIRA_*`, `GH_TOKEN`, optional CI tokens
 - [ ] Verify `.gitignore` covers `.env` and local secrets
@@ -156,7 +158,7 @@ Port only if needed; coreos versions are RHCOS-specific.
 
 ## Phase 7: Secrets & environment
 
-- [ ] Document `JIRA_API_TOKEN` + `JIRA_AUTH_TYPE=bearer`
+- [x] Document `JIRA_API_TOKEN` (basic auth; do not use `JIRA_AUTH_TYPE=bearer` on redhat.atlassian.net)
 - [ ] Document `JIRA_EMAIL` (required for Go Jira client)
 - [ ] Document `GH_TOKEN` for upstream repo investigation
 - [ ] Document Jenkins creds if CI layer is added

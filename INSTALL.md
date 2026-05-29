@@ -41,7 +41,8 @@ jira init
 
 Follow the prompts:
 - **Installation:** Cloud or Server (depending on your setup)
-- **Server URL:** Your JIRA instance URL (e.g., `https://issues.redhat.com` or `https://yourcompany.atlassian.net`)
+- **Server URL:** `https://redhat.atlassian.net`
+- **Default Board:** `PitCrew` (scrum board ID 4323)
 - **Login:** Your email
 - **Default Project:** `PITCREW`
 - **Default Board:** Your team's board name
@@ -56,16 +57,31 @@ Follow the prompts:
 mkdir -p ~/.config/jira
 cat > ~/.config/jira/auth.sh <<EOF
 export JIRA_API_TOKEN="your-token-here"
-export JIRA_AUTH_TYPE="bearer"
 EOF
 chmod 600 ~/.config/jira/auth.sh
+```
+
+**Auth type:** For `redhat.atlassian.net`, use the default **basic auth** (email + API token). Do **not** set `JIRA_AUTH_TYPE=bearer` unless you are using an OAuth token — bearer mode causes `403 Forbidden` with standard Atlassian API tokens.
+
+Before running `jira` commands (or agent sessions), load credentials:
+
+```bash
+source ~/.config/jira/auth.sh
+unset JIRA_AUTH_TYPE   # if bearer was set previously
 ```
 
 #### Test Configuration
 
 ```bash
 source ~/.config/jira/auth.sh
+unset JIRA_AUTH_TYPE
 jira issue list --project PITCREW
+```
+
+Or run the Phase 0 audit script:
+
+```bash
+./scripts/verify-phase0-jira.sh
 ```
 
 You should see your PITCREW issues listed.
