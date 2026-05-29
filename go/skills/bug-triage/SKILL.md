@@ -18,12 +18,20 @@ project = PITCREW AND issuetype = Bug
 
 ### JIRA CLI Commands
 
+**Setup:** Before running commands, source auth credentials:
+```bash
+# Try project-local auth first, fall back to global
+source ./auth.sh 2>/dev/null || source ~/.config/jira/auth.sh
+unset JIRA_AUTH_TYPE
+```
+
+**Queries:**
 ```bash
 # List all open bugs
 jira issue list -q 'project = PITCREW AND issuetype = Bug AND status != Closed' --plain --columns key,summary,status,priority,assignee,created,labels
 
-# List untriaged bugs (no triaged label)
-jira issue list -q 'project = PITCREW AND issuetype = Bug AND labels != triaged AND status != Closed' --plain --columns key,summary,status,priority,assignee,labels
+# List untriaged bugs (no triaged label, exclude bugs already in current sprint)
+jira issue list -q 'project = PITCREW AND issuetype = Bug AND labels != triaged AND status != Closed AND sprint not in openSprints()' --plain --columns key,summary,status,priority,assignee,labels
 
 # View specific issue details
 jira issue view <ISSUE-KEY>
@@ -53,9 +61,9 @@ jira issue view <ISSUE-KEY>
 
 Bugs needing triage have:
 - Issue type = `Bug`
-- Status = `New`, `Open`, or `To Do`
+- Status = `New`, `Open`, or `To Do` (not `Closed`)
 - No `triaged` label
-- No `in-progress` label
+- **Not** already assigned to the current/open sprint (bugs in sprint are actively managed)
 
 ### Other Common Labels
 
