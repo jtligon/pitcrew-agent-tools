@@ -7,7 +7,7 @@ description: PITCREW upstream GitHub repositories, JIRA component mapping, key p
 
 Upstream GitHub repositories, JIRA component mapping, and where to look when investigating bugs or linking work.
 
-> Related: `bug-investigation`, `bug-triage`, `triage-upstream` (planned), [docs/PHASE0.md](../../../docs/PHASE0.md)
+> Related: `bug-investigation`, `bug-triage`, `triage-upstream`, [docs/PHASE0.md](../../../docs/PHASE0.md)
 
 ## PITCREW ↔ upstream map
 

@@ -23,7 +23,7 @@ jira issue list --project PITCREW
 ## What's Inside?
 
 This repository provides:
-- **7 Claude Code Skills** for PITCREW product owner workflows
+- **8 Claude Code Skills** for PITCREW product owner workflows
 - **JQL Query Patterns** - Pre-built queries for PITCREW project
 - **Workflow Documentation** - Triage checklists, estimation guidelines, sprint planning
 
@@ -39,6 +39,7 @@ Skills in `go/skills/` provide specialized knowledge for:
 | `jira-estimation` | Story | Story point estimation |
 | `sprint-planning` | Task, Story | Sprint review and planning |
 | `pitcrew-repositories` | All | Upstream repo map (Jumpstarter, CAIB) |
+| `triage-upstream` | — | Link GitHub issues ↔ PITCREW (`jira` / `upstream` labels) |
 | `pipeline-jira` | All | JIRA linking patterns |
 
 ## Documentation

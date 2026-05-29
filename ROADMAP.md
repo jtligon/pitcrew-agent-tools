@@ -70,13 +70,7 @@ See **[docs/PHASE0.md](docs/PHASE0.md)** for full details.
 
 ### Planned (upstream ↔ JIRA)
 
-- [ ] `triage-upstream` (new) — For **unreviewed** issues in Jumpstarter and automotive-dev-operator (GitHub):
-  - Find open upstream issues not yet tied to PITCREW (define via label/state — TBD in skill)
-  - Search PITCREW for an existing ticket (summary, links, keywords, issue number in description)
-  - If a match exists: apply a JIRA label on the PITCREW issue (label name TBD) and optionally comment/link; do not create duplicates
-  - If no match: report for human decision (new PITCREW ticket vs ignore)
-  - **Tools:** `gh` for upstream issues, `jira` CLI only for PITCREW (not Atlassian MCP)
-  - **Depends on:** `pitcrew-repositories` (repo/org conventions)
+- [x] `triage-upstream` (new) — Unreviewed GitHub issues (`no:label jira`) → match PITCREW → label JIRA `upstream` + GitHub `jira`
 
 ### Port and adapt from coreos-agent-tools
 
@@ -227,7 +221,7 @@ podman run -it --rm \
 
 1. ~~Phase 0~~ — done
 2. Create `pitcrew-repositories`
-3. Create `triage-upstream` (after repositories skill; defines unreviewed + JIRA label conventions)
+3. ~~Create `triage-upstream`~~ — done (`upstream` / `jira` labels)
 4. Rewrite `bug-investigation` and `pipeline-jira` (or drop pipeline-jira if out of scope)
 5. Align triage JQL in existing skills (`Closed` terminal status)
 6. CI pipeline layer (Phase 3) — only if in scope

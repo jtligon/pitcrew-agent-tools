@@ -67,6 +67,13 @@ Upstream GitHub repo map for PITCREW components (Jumpstarter, Automotive-dev-ope
 
 **Use when:** Routing a PITCREW ticket to the right codebase, starting upstream investigation, or answering "which repo is this?"
 
+#### triage-upstream
+Link unreviewed GitHub issues to existing PITCREW tickets:
+- Unreviewed = open issue without GitHub label `jira`
+- On match: JIRA label `upstream`, GitHub label `jira`
+
+**Use when:** Triaging new upstream GitHub issues against the PITCREW backlog
+
 ### JIRA Patterns
 
 #### pipeline-jira
@@ -169,7 +176,6 @@ Content here...
 
 ### Skill Ideas
 
-- **triage-upstream** - Map unreviewed GitHub issues to PITCREW tickets (see ROADMAP)
 - **release-planning** - Release tracking and coordination
 - **customer-escalations** - Handling customer issues
 - **technical-debt** - Tracking and prioritizing tech debt

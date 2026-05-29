@@ -65,6 +65,7 @@ jira issue list --project PITCREW -q 'project = PITCREW AND component = "YOUR-CO
 Skills in `go/skills/` provide domain knowledge for common product owner tasks:
 
 - **pitcrew-repositories** - Upstream repo map and JIRA component routing
+- **triage-upstream** - Link GitHub issues to PITCREW (`upstream` / `jira` labels)
 - **bug-triage** - Systematic bug triage workflow
 - **feature-triage** - RFE duplicate detection and review recommendations
 - **jira-estimation** - Effort estimation guidance
