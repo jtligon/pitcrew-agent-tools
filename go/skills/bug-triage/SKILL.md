@@ -13,17 +13,17 @@ Knowledge for triaging bugs, failures, and issues in the PITCREW project.
 
 ```jql
 project = PITCREW AND issuetype = Bug 
-  AND status not in (Closed, Done, Resolved, Cancelled)
+  AND status != Closed
 ```
 
 ### JIRA CLI Commands
 
 ```bash
 # List all open bugs
-jira issue list -q 'project = PITCREW AND issuetype = Bug AND status not in (Closed, Done, Resolved, Cancelled)' --plain --columns key,summary,status,priority,assignee,created,labels
+jira issue list -q 'project = PITCREW AND issuetype = Bug AND status != Closed' --plain --columns key,summary,status,priority,assignee,created,labels
 
 # List untriaged bugs (no triaged label)
-jira issue list -q 'project = PITCREW AND issuetype = Bug AND labels != triaged AND status not in (Closed, Done, Resolved, Cancelled)' --plain --columns key,summary,status,priority,assignee,labels
+jira issue list -q 'project = PITCREW AND issuetype = Bug AND labels != triaged AND status != Closed' --plain --columns key,summary,status,priority,assignee,labels
 
 # View specific issue details
 jira issue view <ISSUE-KEY>

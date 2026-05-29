@@ -20,10 +20,9 @@ Systematic bug triage workflow including:
 **Use when:** You need to categorize and prioritize new bugs
 
 #### bug-investigation
-Root cause analysis patterns including:
-- Evidence gathering structure
-- Analysis methodology
-- Documentation templates
+Upstream investigation for PITCREW bugs (Jumpstarter, automotive-dev-operator):
+- `gh` for issues, PRs, Actions logs, code search
+- JIRA comment templates; links to `pitcrew-repositories` paths
 
 **Use when:** Investigating the cause of a bug or failure
 
@@ -77,9 +76,9 @@ Link unreviewed GitHub issues to existing PITCREW tickets:
 ### JIRA Patterns
 
 #### pipeline-jira
-Common JIRA linking and workflow patterns
+PITCREW JIRA linking: `upstream` label, GitHub URLs, comments, related issues (not COS pipeline monitoring)
 
-**Use when:** Working with linked issues or complex JIRA workflows
+**Use when:** Linking PITCREW tickets to upstream GitHub or documenting cross-issue relationships
 
 ## How to Use Skills
 

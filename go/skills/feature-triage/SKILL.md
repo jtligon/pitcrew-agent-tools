@@ -13,7 +13,7 @@ Knowledge for triaging **Features** (the issue type used for feature requests in
 
 ```jql
 project = PITCREW AND issuetype = Feature
-  AND status not in (Closed, Done, Resolved, Cancelled)
+  AND status != Closed
 ```
 
 ### JIRA CLI commands
@@ -22,17 +22,17 @@ project = PITCREW AND issuetype = Feature
 
 ```bash
 # List open Features
-jira issue list -q 'project = PITCREW AND issuetype = Feature AND status not in (Closed, Done, Resolved, Cancelled)' --plain --columns key,summary,status,priority,assignee,created
+jira issue list -q 'project = PITCREW AND issuetype = Feature AND status != Closed' --plain --columns key,summary,status,priority,assignee,created
 
 # Richer view for triage (resolution and fix versions help when comparing to closed work)
 jira issue view <ISSUE-KEY>
 
 # Search closed Feature history by keyword (repeat with distinctive phrases from the request)
 # Note: Stories may also contain feature requests - cast a wider net if needed
-jira issue list -q 'project = PITCREW AND issuetype IN (Feature, Story) AND status in (Closed, Done, Resolved) AND (summary ~ "keyword1" OR summary ~ "keyword2")' --plain --no-truncate
+jira issue list -q 'project = PITCREW AND issuetype IN (Feature, Story) AND status = Closed AND (summary ~ "keyword1" OR summary ~ "keyword2")' --plain --no-truncate
 
 # If keyword search returns nothing, fall back to listing ALL closed Features and scanning manually
-jira issue list -q 'project = PITCREW AND issuetype = Feature AND status in (Closed, Done, Resolved)' --plain --columns key,summary,status,priority --no-truncate
+jira issue list -q 'project = PITCREW AND issuetype = Feature AND status = Closed' --plain --columns key,summary,status,priority --no-truncate
 ```
 
 ## Finding previously closed RFEs that duplicate the request
@@ -55,7 +55,7 @@ Always scope to **project PITCREW**. Restrict to **closed** terminal states and 
 
 ```jql
 project = PITCREW AND issuetype = Feature
-  AND status in (Closed, Done, Resolved)
+  AND status = Closed
   AND (
     summary ~ "phrase-one" OR summary ~ "phrase-two" OR text ~ "distinctive phrase"
   )

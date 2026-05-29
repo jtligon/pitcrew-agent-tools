@@ -65,8 +65,8 @@ See **[docs/PHASE0.md](docs/PHASE0.md)** for full details.
 
 ### Needs rewrite (still has CoreOS content)
 
-- [ ] `pipeline-jira` — replace COS/RHCOS pipeline monitoring conventions with PITCREW (or delete if out of scope)
-- [ ] `bug-investigation` — replace RHCOS/OCP/`oc adm release` content with Automotive upstream investigation
+- [x] `pipeline-jira` — PITCREW linking conventions (upstream/jira labels; COS/Jenkins removed)
+- [x] `bug-investigation` — Jumpstarter / automotive-dev-operator investigation via `gh` + `jira`
 
 ### Planned (upstream ↔ JIRA)
 
@@ -222,8 +222,8 @@ podman run -it --rm \
 1. ~~Phase 0~~ — done
 2. Create `pitcrew-repositories`
 3. ~~Create `triage-upstream`~~ — done (`upstream` / `jira` labels)
-4. Rewrite `bug-investigation` and `pipeline-jira` (or drop pipeline-jira if out of scope)
-5. Align triage JQL in existing skills (`Closed` terminal status)
+4. ~~Rewrite `bug-investigation` and `pipeline-jira`~~ — done
+5. ~~Align triage JQL (`Closed` terminal status)~~ — done in bug-triage, feature-triage
 6. CI pipeline layer (Phase 3) — only if in scope
 7. Go CLI + container (Phases 4–5) — only if OpenCode agent is wanted
 
