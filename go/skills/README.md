@@ -57,6 +57,16 @@ Sprint review and planning workflows:
 
 **Use when:** Planning or reviewing sprints
 
+### Upstream / repositories
+
+#### pitcrew-repositories
+Upstream GitHub repo map for PITCREW components (Jumpstarter, Automotive-dev-operator):
+- JIRA component → repo routing
+- Key paths and investigation entry points
+- `gh` and `jira` CLI examples
+
+**Use when:** Routing a PITCREW ticket to the right codebase, starting upstream investigation, or answering "which repo is this?"
+
 ### JIRA Patterns
 
 #### pipeline-jira
@@ -159,6 +169,7 @@ Content here...
 
 ### Skill Ideas
 
+- **triage-upstream** - Map unreviewed GitHub issues to PITCREW tickets (see ROADMAP)
 - **release-planning** - Release tracking and coordination
 - **customer-escalations** - Handling customer issues
 - **technical-debt** - Tracking and prioritizing tech debt

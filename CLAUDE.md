@@ -16,7 +16,7 @@ PITCREW uses one project and **PitCrew** scrum board. Work is split by **compone
 | Automotive-dev-operator | https://github.com/centos-automotive-suite/automotive-dev-operator | CAIB / OS image builds (`caib` CLI, ImageBuild CRD) |
 | Security | *(none)* | Product Security — **embargoed CVEs** assigned into PITCREW; not a product codebase |
 
-See [docs/PHASE0.md](docs/PHASE0.md) for full inventory.
+See [docs/PHASE0.md](docs/PHASE0.md) and skill **`pitcrew-repositories`** for repo paths and investigation entry points.
 
 ## JIRA Configuration
 
@@ -64,6 +64,7 @@ jira issue list --project PITCREW -q 'project = PITCREW AND component = "YOUR-CO
 
 Skills in `go/skills/` provide domain knowledge for common product owner tasks:
 
+- **pitcrew-repositories** - Upstream repo map and JIRA component routing
 - **bug-triage** - Systematic bug triage workflow
 - **feature-triage** - RFE duplicate detection and review recommendations
 - **jira-estimation** - Effort estimation guidance

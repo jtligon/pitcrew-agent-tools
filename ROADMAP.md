@@ -68,9 +68,19 @@ See **[docs/PHASE0.md](docs/PHASE0.md)** for full details.
 - [ ] `pipeline-jira` — replace COS/RHCOS pipeline monitoring conventions with PITCREW (or delete if out of scope)
 - [ ] `bug-investigation` — replace RHCOS/OCP/`oc adm release` content with Automotive upstream investigation
 
+### Planned (upstream ↔ JIRA)
+
+- [ ] `triage-upstream` (new) — For **unreviewed** issues in Jumpstarter and automotive-dev-operator (GitHub):
+  - Find open upstream issues not yet tied to PITCREW (define via label/state — TBD in skill)
+  - Search PITCREW for an existing ticket (summary, links, keywords, issue number in description)
+  - If a match exists: apply a JIRA label on the PITCREW issue (label name TBD) and optionally comment/link; do not create duplicates
+  - If no match: report for human decision (new PITCREW ticket vs ignore)
+  - **Tools:** `gh` for upstream issues, `jira` CLI only for PITCREW (not Atlassian MCP)
+  - **Depends on:** `pitcrew-repositories` (repo/org conventions)
+
 ### Port and adapt from coreos-agent-tools
 
-- [ ] `pitcrew-repositories` (new) — upstream repo map, key files, relationships (modeled on `rhcos-repositories`)
+- [x] `pitcrew-repositories` (new) — upstream repo map, key files, JIRA component routing (modeled on `rhcos-repositories`)
 - [ ] `pitcrew-activity` (new) — GitHub/GitLab activity summaries for relevant orgs (modeled on `coreos-activity`)
 - [ ] `pipeline-triage-workflow` — generic triage stages; update job/CI terminology
 - [ ] `pipeline-failures` — failure patterns for *your* CI (not kola/build-arch)
@@ -215,12 +225,13 @@ podman run -it --rm \
 
 ## Suggested order of work
 
-1. Phase 0 decisions (scope, upstream inventory, JIRA audit)
-2. Rewrite `pipeline-jira` and `bug-investigation`
-3. Create `pitcrew-repositories`
-4. Complete CLAUDE.md
-5. CI pipeline layer (Phase 3) — only if in scope
-6. Go CLI + container (Phases 4–5) — only if OpenCode agent is wanted
+1. ~~Phase 0~~ — done
+2. Create `pitcrew-repositories`
+3. Create `triage-upstream` (after repositories skill; defines unreviewed + JIRA label conventions)
+4. Rewrite `bug-investigation` and `pipeline-jira` (or drop pipeline-jira if out of scope)
+5. Align triage JQL in existing skills (`Closed` terminal status)
+6. CI pipeline layer (Phase 3) — only if in scope
+7. Go CLI + container (Phases 4–5) — only if OpenCode agent is wanted
 
 ---
 
@@ -232,3 +243,4 @@ podman run -it --rm \
 |------|------|
 | 2026-05-29 | Roadmap created from coreos-agent-tools customization checklist |
 | 2026-05-29 | Phase 0: upstream repos confirmed (jumpstarter, automotive-dev-operator) |
+| 2026-05-29 | Planned `triage-upstream` skill — map unreviewed GitHub issues to PITCREW tickets + label |

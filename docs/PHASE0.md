@@ -61,7 +61,7 @@ Jumpstarter and Automotive-dev-operator are separate engineering streams under t
 
 ## Upstream repositories
 
-Codebases tied to JIRA components (maps to future `pitcrew-repositories` skill). **Security is not listed here** — it has no upstream project.
+Codebases tied to JIRA components — see skill **`go/skills/pitcrew-repositories`**. **Security is not listed here** — it has no upstream project.
 
 ### Jumpstarter
 
