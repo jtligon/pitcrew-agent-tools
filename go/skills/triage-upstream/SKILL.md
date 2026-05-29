@@ -156,6 +156,18 @@ If `jira issue edit`, `jira issue comment add`, or `gh issue edit` fails:
 
 ---
 
+## Dry run (no labels)
+
+```bash
+./scripts/triage-upstream-dry-run.sh
+# Optional: scan more issues per repo
+LIMIT=50 ./scripts/triage-upstream-dry-run.sh
+```
+
+Reports what would get JIRA `upstream` and GitHub `jira` without calling `jira issue edit` or `gh issue edit`.
+
+---
+
 ## Batch run (both repos)
 
 ```bash
