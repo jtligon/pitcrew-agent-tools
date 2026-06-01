@@ -29,7 +29,7 @@ This repository provides:
 
 ## Skills
 
-Skills in `go/skills/` provide specialized knowledge for:
+Skills in `skills/` provide specialized knowledge for:
 
 | Skill | Issue Type | Purpose |
 |-------|------------|---------|
@@ -47,7 +47,7 @@ Skills in `go/skills/` provide specialized knowledge for:
 - **[INSTALL.md](INSTALL.md)** - Setup guide for jira CLI
 - **[ROADMAP.md](ROADMAP.md)** - Customization checklist (porting from coreos-agent-tools)
 - **[docs/PHASE0.md](docs/PHASE0.md)** - Scope, upstream repos, JIRA inventory
-- **[go/skills/README.md](go/skills/README.md)** - Skills documentation
+- **[skills/README.md](skills/README.md)** - Skills documentation
 
 ## Issue Types
 
@@ -90,10 +90,12 @@ jira issue list -q 'project = PITCREW AND issuetype = Story AND "Story Points[Nu
 ## Contributing
 
 When adding new skills:
-- Create a new directory under `go/skills/`
+- Create a new directory under `skills/`
 - Include a `SKILL.md` file with frontmatter
 - Document JIRA queries, workflows, and decision criteria
 - Update this README
+
+Skills are symlinked to `.claude/skills/` for Claude Code compatibility.
 
 ## License
 

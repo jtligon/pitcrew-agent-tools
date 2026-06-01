@@ -114,7 +114,7 @@ Then reference skills in conversation:
 To use skills in any project:
 
 ```bash
-cp -r go/skills/* ~/.claude/skills/
+cp -r skills/* ~/.claude/skills/
 ```
 
 ### Option 2: Use JQL Queries Directly
@@ -189,7 +189,7 @@ Claude will:
 
 ## Customizing Skills
 
-Skills are markdown files in `go/skills/<skill-name>/SKILL.md`. You can:
+Skills are markdown files in `skills/<skill-name>/SKILL.md`. You can:
 
 1. **Edit existing skills** to match your team's workflows
 2. **Add new skills** by creating a new directory with a `SKILL.md` file
