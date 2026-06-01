@@ -2,6 +2,7 @@
 # Dry-run triage-upstream: report matches only; never add labels.
 set -euo pipefail
 export GH_FORCE_TTY=0
+export NO_COLOR=1
 
 if [[ -f "${HOME}/.config/jira/auth.sh" ]]; then
   # shellcheck source=/dev/null
@@ -42,6 +43,10 @@ process_repo() {
   printf "| GitHub | Title | PITCREW match | Would apply |\n"
   printf "|--------|-------|---------------|-------------|\n"
 
+  local issues
+  issues=$(gh issue list --repo "${repo}" --state open --limit "${LIMIT}" --json number,title,labels 2>/dev/null | \
+    jq -c '.[] | select([.labels[].name] | index("jira") | not)')
+
   while IFS= read -r row; do
     [[ -z "${row}" ]] && continue
     local num title match key
@@ -57,11 +62,7 @@ process_repo() {
       unmatched=$((unmatched + 1))
     fi
     [[ "${count}" -ge "${LIMIT}" ]] && break
-  done < <(
-    gh api "repos/${repo}/issues?state=open&per_page=100" -q . 2>/dev/null \
-      | jq -c --argjson lim "${LIMIT}" \
-          '[.[] | select(.pull_request == null) | select([.labels[].name] | index("jira") | not) | {number, title}] | .[:$lim][]'
-  )
+  done <<< "${issues}"
 
   echo ""
   echo "_Scanned up to ${LIMIT} unlabeled issues (no \`jira\` label). Matched: ${matched}, unmatched: ${unmatched}_"
@@ -77,4 +78,4 @@ process_repo "centos-automotive-suite/automotive-dev-operator" "Automotive-dev-o
 
 echo ""
 echo "---"
-echo "To apply labels after review, use \`go/skills/triage-upstream/SKILL.md\` section 3."
+echo "To apply labels after review, use \`skills/triage-upstream/SKILL.md\` section 3."
